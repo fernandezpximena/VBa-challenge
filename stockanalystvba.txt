@@ -1,0 +1,140 @@
+Sub stockanalyst():
+    
+  
+    Dim ws As Worksheet
+
+
+    For Each ws In Worksheets
+
+
+        ws.Cells(1, 9).Value = "Ticker"
+        ws.Cells(1, 10).Value = "Yearly Change"
+        ws.Cells(1, 11).Value = "Percent Change"
+        ws.Cells(1, 12).Value = "Total Stock Volume"
+
+        
+       
+        Dim totalvol As Double
+        totalvol = 0
+
+        Dim rowcount As Long
+        rowcount = 2
+
+       
+        Dim yearopen As Double
+        yearopen = 0
+
+        Dim yearclose As Double
+        yearclose = 0
+        
+     
+        Dim yearchange As Double
+        yearchange = 0
+
+
+        Dim pchange As Double
+        percentchange = 0
+
+        Dim lastrow As Long
+        lastrow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+
+        For i = 2 To lastrow
+            
+            If ws.Cells(i, 1).Value <> ws.Cells(i - 1, 1).Value Then
+
+                yearopen = ws.Cells(i, 3).Value
+
+            End If
+
+         
+            totalvol = totalvol + ws.Cells(i, 7)
+
+           
+            If ws.Cells(i, 1).Value <> ws.Cells(i + 1, 1).Value Then
+
+             
+                ws.Cells(rowcount, 9).Value = ws.Cells(i, 1).Value
+
+                
+                ws.Cells(rowcount, 12).Value = totalvol
+
+                
+                yearclose = ws.Cells(i, 6).Value
+
+                yearchange = yearclose - yearopen
+                ws.Cells(rowcount, 10).Value = yearchange
+
+                
+                If yearchange >= 0 Then
+                    ws.Cells(rowcount, 10).Interior.ColorIndex = 4
+                Else
+                    ws.Cells(rowcount, 10).Interior.ColorIndex = 3
+                End If
+
+               
+               
+            
+
+                totalvol = 0
+                yearopen = 0
+                yearclose = 0
+                yearchange = 0
+                pchange = 0
+                
+            End If
+        Next i
+
+        
+        ws.Cells(2, 15).Value = "Greatest Increase"
+        ws.Cells(3, 15).Value = "Greatest Decrease"
+        ws.Cells(4, 15).Value = "Greatest Total Volume"
+        ws.Cells(1, 16).Value = "Ticker"
+        ws.Cells(1, 17).Value = "Value"
+
+        lastrow = ws.Cells(Rows.Count, 9).End(xlUp).Row
+
+        Dim beststock As String
+        Dim bestvalue As Double
+
+
+        bestvalue = ws.Cells(2, 11).Value
+
+        Dim worsestock As String
+        Dim worsevalue As Double
+
+   
+        worsevalue = ws.Cells(2, 11).Value
+
+        Dim stockmost As String
+        Dim valuemost As Double
+
+        valuemost = ws.Cells(2, 12).Value
+
+   
+        For j = 2 To lastrow
+
+         
+            If ws.Cells(j, 11).Value > bestvalue Then
+                bestvalue = ws.Cells(j, 11).Value
+                beststock = ws.Cells(j, 9).Value
+            End If
+
+          
+            If ws.Cells(j, 11).Value < worsevalue Then
+                worsevalue = ws.Cells(j, 11).Value
+                worsestock = ws.Cells(j, 9).Value
+            End If
+
+          
+            If ws.Cells(j, 12).Value > valuemost Then
+               valuemost = ws.Cells(j, 12).Value
+               stockmost = ws.Cells(j, 9).Value
+            End If
+
+        Next j
+
+        
+
+    Next ws
+
+End Sub
